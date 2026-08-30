@@ -5,9 +5,8 @@
     user: '[data-message-author-role="user"]'
   };
 
-  const ATTR_INITIALIZED = 'data-cgpt-nav-initialized';
-  const MIN_VIEWPORT_MULTIPLIER = 1.5;
-  const OBSERVER_DEBOUNCE_MS = 250;
+  const CONTROLS_CLASS = 'cgpt-nav-controls';
+  const OBSERVER_DEBOUNCE_MS = 150;
 
   function getTurnContainer(message) {
     return message.closest('article') ?? message;
@@ -41,11 +40,6 @@
     });
   }
 
-  function isLongResponse(message) {
-    const turn = getTurnContainer(message);
-    return turn.getBoundingClientRect().height >= window.innerHeight * MIN_VIEWPORT_MULTIPLIER;
-  }
-
   function makeButton(label, title, onClick) {
     const button = document.createElement('button');
     button.type = 'button';
@@ -58,41 +52,32 @@
   }
 
   function addNavigationControls(assistantMessage) {
-    if (assistantMessage.hasAttribute(ATTR_INITIALIZED)) return;
-
-    // Do not mark the response as initialized until controls are actually
-    // installed. ChatGPT streams responses, so a response can begin short
-    // and cross the threshold later.
-    if (!isLongResponse(assistantMessage)) return;
-
     const turn = getTurnContainer(assistantMessage);
 
-    // Defensive duplicate check in case ChatGPT reuses or rearranges nodes.
-    if (turn.querySelector('.cgpt-nav-controls')) {
-      assistantMessage.setAttribute(ATTR_INITIALIZED, 'true');
-      return;
-    }
+    // ChatGPT can re-render a turn at any time. Never trust a persistent
+    // "initialized" marker; inspect the live DOM and recreate controls when
+    // they are missing.
+    if (turn.querySelector(`.${CONTROLS_CLASS}`)) return;
 
     const controls = document.createElement('div');
-    controls.className = 'cgpt-nav-controls';
+    controls.className = CONTROLS_CLASS;
     controls.setAttribute('role', 'navigation');
     controls.setAttribute('aria-label', 'ChatGPT response navigation');
 
-    const responseButton = makeButton(
-      '↑ Response',
-      'Scroll to the start of this response',
-      () => smoothScrollTo(assistantMessage)
+    controls.append(
+      makeButton(
+        '↑ Response',
+        'Scroll to the start of this response',
+        () => smoothScrollTo(assistantMessage)
+      ),
+      makeButton(
+        '↑ Prompt',
+        'Scroll to the user prompt that produced this response',
+        () => smoothScrollTo(getPreviousUserMessage(assistantMessage))
+      )
     );
 
-    const promptButton = makeButton(
-      '↑ Prompt',
-      'Scroll to the user prompt that produced this response',
-      () => smoothScrollTo(getPreviousUserMessage(assistantMessage))
-    );
-
-    controls.append(responseButton, promptButton);
     turn.appendChild(controls);
-    assistantMessage.setAttribute(ATTR_INITIALIZED, 'true');
   }
 
   function decorateAssistantMessages() {
@@ -106,6 +91,7 @@
   });
 
   decorateAssistantMessages();
+
   observer.observe(document.body, {
     childList: true,
     subtree: true
