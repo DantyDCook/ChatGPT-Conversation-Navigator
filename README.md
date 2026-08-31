@@ -2,9 +2,9 @@
 
 A lightweight Chrome extension for navigating long ChatGPT conversations without manually dragging through large responses.
 
-## v0.2.3 — Recovery + Safe Scaling
+## v0.2.3 — Recovery, Safe Scaling + Navigator UX
 
-v0.2.3 is a recovery hotfix for the v0.2.2 UI-scale regression.
+v0.2.3 started as a recovery hotfix for the v0.2.2 UI-scale regression and now also includes usability improvements discovered during live browser validation.
 
 ### Safe UI scale
 
@@ -25,9 +25,30 @@ The popup provides:
 
 This recovery surface remains available even when the floating panel itself is inaccessible.
 
+### Settings usability
+
+Settings continue to save immediately as controls change; there is no separate save step.
+
+The in-panel settings experience now adds:
+
+- a clear **Settings** heading;
+- a sticky **Done** button that stays reachable while scrolling;
+- a sticky main navigator header;
+- click-outside behavior that returns to the main navigator;
+- `Escape` to close settings;
+- an **Autosaved** indicator so the close action is not mistaken for Save/Cancel.
+
+### Contextual Jump to Bottom
+
+The primary navigator actions now include **↓ Bottom** only when the conversation bottom is not currently reached.
+
+- When ChatGPT's native jump-to-bottom control is discoverable, the extension invokes it directly.
+- Otherwise the extension finds the conversation scroll container and performs a smooth fallback scroll to the bottom.
+- The button disappears again once the bottom is reached.
+
 ### Regression tracking
 
-Repository work for this hotfix is tracked through GitHub issues and a pull request. The repeatable test matrix is in [`docs/SMOKE_TESTS.md`](docs/SMOKE_TESTS.md), and the expected issue → branch → PR workflow is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Repository work for this release is tracked through GitHub issues and pull request #4. The repeatable test matrix is in [`docs/SMOKE_TESTS.md`](docs/SMOKE_TESTS.md), and the expected issue → branch → PR workflow is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## v0.2.2 — Sizing + Response Tracking
 
@@ -132,6 +153,8 @@ ChatGPT-Conversation-Navigator/
 ├── content-v022.css      # base v0.2.2 styles
 ├── recovery.js           # v0.2.3 geometry guard + recovery message handler
 ├── hotfix-v023.css       # removes zoom and applies safe density scaling
+├── ux-v023.js            # settings UX + contextual bottom-jump behavior
+├── ux-v023.css           # sticky settings/top-action UX styles
 ├── popup.html
 ├── popup.js
 ├── popup.css
@@ -154,6 +177,8 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 ### v0.2.x
 
 - Validate all scale/width/height combinations and drag clamping.
+- Validate settings close/sticky behavior across panel sizes.
+- Validate contextual Jump to Bottom across ChatGPT scroll/render variants.
 - Validate Follow viewport vs Latest response across long conversations and streaming responses.
 - Validate ChatGPT Appearance, Contrast, Accent Color, and System-theme transitions.
 - Improve automatic code-block labels.
@@ -163,7 +188,6 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 
 - Heading/section indexing in the response mini-map.
 - Previous/next response navigation.
-- Jump to conversation bottom.
 - Optional keyboard shortcuts.
 
 ### Later
@@ -175,7 +199,7 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 
 ## Resilience strategy
 
-DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. Recovery and geometry guards are isolated from the main navigation logic so layout failures can be repaired without rewriting DOM indexing.
+DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. Recovery and UX layers are isolated from the main navigation logic so layout and interaction failures can be repaired without rewriting DOM indexing.
 
 ## License
 
