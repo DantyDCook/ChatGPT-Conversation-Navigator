@@ -1,6 +1,6 @@
 # Navigator Smoke / Regression Tests
 
-Run these checks after changing floating-panel geometry, persistence, recovery, or tracking behavior.
+Run these checks after changing floating-panel geometry, persistence, recovery, tracking, or interaction behavior.
 
 ## Setup
 
@@ -18,6 +18,16 @@ Run these checks after changing floating-panel geometry, persistence, recovery, 
 - [ ] Jump to Prompt selects the correct prompt for the tracked response.
 - [ ] Jump to Response selects the correct assistant response.
 
+## Contextual Jump to Bottom (#6)
+
+- [ ] At the conversation bottom, **↓ Bottom** is hidden.
+- [ ] Scroll upward until the bottom is no longer visible: **↓ Bottom** appears.
+- [ ] Clicking **↓ Bottom** returns to the conversation bottom.
+- [ ] The button hides again after reaching the bottom.
+- [ ] Behavior works when ChatGPT's native bottom-jump button is present.
+- [ ] Fallback scrolling still works if the native button cannot be detected.
+- [ ] Prompt and Response controls remain correctly sized when the third action appears/disappears.
+
 ## Tracking modes
 
 - [ ] Follow viewport switches context as the reading viewport enters different assistant responses.
@@ -30,6 +40,18 @@ Run these checks after changing floating-panel geometry, persistence, recovery, 
 - [ ] Resize the browser smaller: panel is clamped into the visible viewport.
 - [ ] Resize larger again: panel remains usable.
 - [ ] Reset position returns to the default lower-right placement.
+
+## Settings UX (#5)
+
+- [ ] Opening settings displays a clear **Settings** heading and **Done** control.
+- [ ] The main navigator header remains visible/sticky while the panel scrolls.
+- [ ] The Settings/Done row remains accessible while scrolling through settings.
+- [ ] Adjusting a setting autosaves immediately; no explicit Save action is required.
+- [ ] Clicking **Done** closes settings and returns to the main navigator.
+- [ ] Clicking anywhere outside the navigator closes settings.
+- [ ] Pressing `Escape` closes settings.
+- [ ] Clicking within the navigator does not unexpectedly close settings.
+- [ ] Closing settings preserves panel position, size, opacity, tracking mode, and other changed values.
 
 ## Appearance controls
 
