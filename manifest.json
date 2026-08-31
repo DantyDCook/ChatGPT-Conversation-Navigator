@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Conversation Navigator",
-  "version": "0.2.1",
-  "description": "Navigate ChatGPT responses with a draggable, theme-aware mini-map, prompt/response jumps, code-block navigation, copy controls, and previews.",
+  "version": "0.2.2",
+  "description": "Navigate ChatGPT responses with a draggable, theme-aware, resizable mini-map and viewport/latest response tracking.",
   "host_permissions": ["https://chatgpt.com/*"],
   "content_scripts": [
     {
       "matches": ["https://chatgpt.com/*"],
-      "js": ["dom-adapter.js", "content.js"],
-      "css": ["content.css"],
+      "js": ["dom-adapter.js", "content-v022.js"],
+      "css": ["content-v022.css"],
       "run_at": "document_idle"
     }
   ]
