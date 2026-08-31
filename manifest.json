@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatGPT Conversation Navigator",
   "version": "0.2.3",
-  "description": "Navigate ChatGPT responses with a draggable, theme-aware mini-map, safe sizing controls, contextual bottom jump, and pinned-extension recovery actions.",
+  "description": "Navigate ChatGPT responses with a draggable, theme-aware mini-map, safe sizing controls, contextual bottom jump, visibility modes, and pinned-extension recovery actions.",
   "permissions": ["activeTab"],
   "host_permissions": ["https://chatgpt.com/*"],
   "action": {
@@ -12,8 +12,8 @@
   "content_scripts": [
     {
       "matches": ["https://chatgpt.com/*"],
-      "js": ["dom-adapter.js", "content-v022.js", "recovery.js", "ux-v023.js"],
-      "css": ["content-v022.css", "hotfix-v023.css", "ux-v023.css"],
+      "js": ["dom-adapter.js", "content-v022.js", "recovery.js", "ux-v023.js", "visibility-v023.js"],
+      "css": ["content-v022.css", "hotfix-v023.css", "ux-v023.css", "visibility-v023.css"],
       "run_at": "document_idle"
     }
   ]
