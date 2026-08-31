@@ -125,6 +125,16 @@
     }
   }
 
+  function closeSettingsIfOpen() {
+    if (!panel) return;
+    const settings = panel.querySelector(SETTINGS_SELECTOR);
+    if (!settings || settings.hidden) return;
+
+    const toggle = [...panel.querySelectorAll('.cgpt-nav-panel-header button')]
+      .find((button) => button.hasAttribute('aria-expanded'));
+    toggle?.click();
+  }
+
   function ensureBubble() {
     if (bubble?.isConnected) return bubble;
 
@@ -235,6 +245,7 @@
     ensureVisibilityControls();
     syncBubbleTheme();
 
+    if (mode !== 'full') closeSettingsIfOpen();
     panel.dataset.cgptNavVisibility = mode;
 
     if (mode === 'bubble') {
