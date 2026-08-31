@@ -184,7 +184,9 @@
       return;
     }
 
-    sendResponse({ ok: false, error: 'Unknown recovery action.' });
+    // Other popup actions are owned by separate content layers (for example
+    // visibility-v023.js). Do not answer them here, or this listener can race
+    // the owning layer with a false "unknown action" response.
   });
 
   const bodyObserver = new MutationObserver(discoverPanel);
