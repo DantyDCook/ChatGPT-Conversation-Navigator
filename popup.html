@@ -10,10 +10,15 @@
   <main class="popup-shell">
     <header>
       <h1>Conversation Navigator</h1>
-      <p>Recovery controls for the floating panel.</p>
+      <p>Visibility and recovery controls for the floating panel.</p>
     </header>
 
-    <section class="actions" aria-label="Navigator recovery actions">
+    <section class="actions" aria-label="Navigator visibility and recovery actions">
+      <button id="showNavigator" type="button" hidden>
+        <span id="showNavigatorTitle" class="button-title">Show Navigator</span>
+        <span id="showNavigatorHelp" class="button-help">Restore the full in-page navigator</span>
+      </button>
+
       <button id="bringIntoView" type="button">
         <span class="button-title">Bring Into View</span>
         <span class="button-help">Keep settings, restore panel position</span>
