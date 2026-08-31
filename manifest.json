@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Conversation Navigator",
-  "version": "0.1.0",
-  "description": "Jump from long ChatGPT responses back to the prompt or the start of the response.",
+  "version": "0.2.0",
+  "description": "Navigate ChatGPT responses with a floating mini-map, prompt/response jumps, code-block navigation, copy controls, and previews.",
   "host_permissions": ["https://chatgpt.com/*"],
   "content_scripts": [
     {
       "matches": ["https://chatgpt.com/*"],
-      "js": ["content.js"],
+      "js": ["dom-adapter.js", "content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }
