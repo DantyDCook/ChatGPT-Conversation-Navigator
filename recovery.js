@@ -60,15 +60,17 @@
 
     // v0.2.2 used CSS zoom, which altered fixed-position geometry and could
     // strand the panel outside the viewport. v0.2.3 keeps the outer panel at
-    // normal page scale and applies scale only to control density variables.
+    // normal page scale and applies scale only to control-density variables.
     panel.style.setProperty('zoom', '1');
     setPxVariable('--cgpt-nav-header-min-height', 42, scale);
-    setPxVariable('--cgpt-nav-header-pad-y', 8, scale);
+    setPxVariable('--cgpt-nav-header-pad-top', 8, scale);
     setPxVariable('--cgpt-nav-header-pad-x', 12, scale);
+    setPxVariable('--cgpt-nav-header-pad-bottom', 6, scale);
     setPxVariable('--cgpt-nav-header-button-height', 30, scale);
     setPxVariable('--cgpt-nav-header-button-min-width', 34, scale);
     setPxVariable('--cgpt-nav-primary-min-height', 36, scale);
     setPxVariable('--cgpt-nav-primary-gap', 8, scale);
+    setPxVariable('--cgpt-nav-primary-pad-top', 4, scale);
     setPxVariable('--cgpt-nav-primary-pad-x', 12, scale);
     setPxVariable('--cgpt-nav-primary-pad-bottom', 10, scale);
     setPxVariable('--cgpt-nav-settings-pad', 10, scale);
@@ -88,18 +90,20 @@
     const rect = panel.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
 
-    const maxX = Math.max(VIEWPORT_MARGIN, window.innerWidth - rect.width - VIEWPORT_MARGIN);
-    const maxY = Math.max(VIEWPORT_MARGIN, window.innerHeight - rect.height - VIEWPORT_MARGIN);
-    const x = clamp(rect.left, VIEWPORT_MARGIN, maxX);
-    const y = clamp(rect.top, VIEWPORT_MARGIN, maxY);
-
     const outside =
       rect.left < VIEWPORT_MARGIN ||
       rect.top < VIEWPORT_MARGIN ||
       rect.right > window.innerWidth - VIEWPORT_MARGIN ||
       rect.bottom > window.innerHeight - VIEWPORT_MARGIN;
 
-    if (!outside && !panel.style.left && !panel.style.top) return;
+    // Do not rewrite an already-valid explicit position. Rewriting the same
+    // style values from a style MutationObserver can create an observer loop.
+    if (!outside) return;
+
+    const maxX = Math.max(VIEWPORT_MARGIN, window.innerWidth - rect.width - VIEWPORT_MARGIN);
+    const maxY = Math.max(VIEWPORT_MARGIN, window.innerHeight - rect.height - VIEWPORT_MARGIN);
+    const x = clamp(rect.left, VIEWPORT_MARGIN, maxX);
+    const y = clamp(rect.top, VIEWPORT_MARGIN, maxY);
 
     panel.style.left = `${x}px`;
     panel.style.top = `${y}px`;
