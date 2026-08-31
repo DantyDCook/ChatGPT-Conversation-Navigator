@@ -5,9 +5,9 @@
 .cgpt-nav-panel-header {
   min-height: var(--cgpt-nav-header-min-height, 42px);
   padding:
-    var(--cgpt-nav-header-pad-y, 8px)
+    var(--cgpt-nav-header-pad-top, 8px)
     var(--cgpt-nav-header-pad-x, 12px)
-    calc(var(--cgpt-nav-header-pad-y, 8px) * 0.75);
+    var(--cgpt-nav-header-pad-bottom, 6px);
 }
 
 .cgpt-nav-header-button {
@@ -18,7 +18,7 @@
 .cgpt-nav-primary-actions {
   gap: var(--cgpt-nav-primary-gap, 8px);
   padding:
-    calc(var(--cgpt-nav-primary-gap, 8px) * 0.5)
+    var(--cgpt-nav-primary-pad-top, 4px)
     var(--cgpt-nav-primary-pad-x, 12px)
     var(--cgpt-nav-primary-pad-bottom, 10px);
 }
