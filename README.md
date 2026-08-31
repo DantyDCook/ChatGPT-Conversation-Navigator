@@ -16,31 +16,43 @@ The recovery layer also re-clamps the rendered panel after scale/style changes a
 
 ### Pinned-extension recovery popup
 
-The Chrome extension action now opens an out-of-band recovery popup. Pin **ChatGPT Conversation Navigator** to the Chrome toolbar for easy access.
+The Chrome extension action opens an out-of-band recovery/visibility popup. Pin **ChatGPT Conversation Navigator** to the Chrome toolbar for easy access.
 
 The popup provides:
 
-- **Bring Into View** — clears only the saved panel position, preserves the rest of the user's settings, and reloads ChatGPT into the safe default placement.
-- **Reset Navigator** — restores safe defaults for position, scale, text size, width/height, tracking mode, lock state, and idle opacity.
+- **Show Navigator / Restore Full Navigator** — appears when the in-page UI is Hidden or minimized to Bubble.
+- **Bring Into View** — clears only the saved full-panel position, preserves the rest of the user's settings, and reloads ChatGPT into a safe placement.
+- **Reset Navigator** — restores safe defaults for position, scale, text size, width/height, tracking mode, lock state, idle opacity, and Full visibility.
 
 This recovery surface remains available even when the floating panel itself is inaccessible.
+
+### Full / Bubble / Hidden visibility
+
+The navigator now has three explicit visibility states:
+
+- **Full** — complete Response Navigator.
+- **Bubble** — click the header **−** control to collapse the navigator into a small floating chat-head style button. The bubble can be dragged and its position persists independently of the full panel.
+- **Hidden** — choose **Hide Navigator** in settings to remove the in-page UI completely until it is restored from the pinned extension popup.
+
+The bubble inherits ChatGPT theme/accent colors and the configured idle opacity. Clicking the bubble restores the Full navigator. Full-panel and bubble coordinates are stored independently so a tiny bubble position cannot strand the larger panel offscreen.
 
 ### Settings usability
 
 Settings continue to save immediately as controls change; there is no separate save step.
 
-The in-panel settings experience now adds:
+The in-panel settings experience adds:
 
 - a clear **Settings** heading;
 - a sticky **Done** button that stays reachable while scrolling;
 - a sticky main navigator header;
 - click-outside behavior that returns to the main navigator;
 - `Escape` to close settings;
-- an **Autosaved** indicator so the close action is not mistaken for Save/Cancel.
+- an **Autosaved** indicator so the close action is not mistaken for Save/Cancel;
+- **Hide Navigator** for entering Hidden mode.
 
 ### Contextual Jump to Bottom
 
-The primary navigator actions now include **↓ Bottom** only when the conversation bottom is not currently reached.
+The primary navigator actions include **↓ Bottom** only when the conversation bottom is not currently reached.
 
 - When ChatGPT's native jump-to-bottom control is discoverable, the extension invokes it directly.
 - Otherwise the extension finds the conversation scroll container and performs a smooth fallback scroll to the bottom.
@@ -48,7 +60,7 @@ The primary navigator actions now include **↓ Bottom** only when the conversat
 
 ### Regression tracking
 
-Repository work for this release is tracked through GitHub issues and pull request #4. The repeatable test matrix is in [`docs/SMOKE_TESTS.md`](docs/SMOKE_TESTS.md), and the expected issue → branch → PR workflow is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Repository work is tracked through GitHub issues and pull request #4. The repeatable test matrix is in [`docs/SMOKE_TESTS.md`](docs/SMOKE_TESTS.md), and the expected issue → branch → PR workflow is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## v0.2.2 — Sizing + Response Tracking
 
@@ -96,7 +108,7 @@ The navigator follows the effective ChatGPT page appearance rather than maintain
 - Watches ChatGPT root theme/class/style changes and the system dark-mode media query.
 - Reads `document.documentElement.dataset.chatTheme` for ChatGPT accent modes.
 - Supports Default, Green, Blue, Yellow, Pink, Orange, Purple, and Black accent treatments.
-- Hover previews use the same theme variables as the navigator.
+- Hover previews and the minimized bubble use the same theme variables.
 
 ## v0.2 — Response Mini-Map
 
@@ -135,7 +147,7 @@ A debounced `MutationObserver` handles ChatGPT's streamed SPA DOM. Scroll and re
 3. Enable **Developer mode**.
 4. Choose **Load unpacked** and select the repository directory.
 5. After pulling an update, click **Reload** on the extension card and refresh ChatGPT.
-6. Optionally pin the extension in Chrome so the recovery popup is always available.
+6. Pin the extension in Chrome so visibility/recovery controls remain available even in Hidden mode.
 
 Update an existing development checkout:
 
@@ -155,6 +167,8 @@ ChatGPT-Conversation-Navigator/
 ├── hotfix-v023.css       # removes zoom and applies safe density scaling
 ├── ux-v023.js            # settings UX + contextual bottom-jump behavior
 ├── ux-v023.css           # sticky settings/top-action UX styles
+├── visibility-v023.js    # Full/Bubble/Hidden state + bubble dragging
+├── visibility-v023.css   # bubble and visibility-mode styles
 ├── popup.html
 ├── popup.js
 ├── popup.css
@@ -179,6 +193,7 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 - Validate all scale/width/height combinations and drag clamping.
 - Validate settings close/sticky behavior across panel sizes.
 - Validate contextual Jump to Bottom across ChatGPT scroll/render variants.
+- Validate Full/Bubble/Hidden transitions and recovery.
 - Validate Follow viewport vs Latest response across long conversations and streaming responses.
 - Validate ChatGPT Appearance, Contrast, Accent Color, and System-theme transitions.
 - Improve automatic code-block labels.
@@ -188,10 +203,12 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 
 - Heading/section indexing in the response mini-map.
 - Previous/next response navigation.
-- Optional keyboard shortcuts.
+- Keyboard command mode (#8): arm with a low-conflict chord, then use single-key actions for Prompt, Response, Bottom, Code Blocks, Minimize, Hide, and Settings.
+- Later configurable shortcut bindings (#12) and an optional armed-state key cheat sheet (#13).
 
 ### Later
 
+- Copy-fidelity parity hardening against ChatGPT native Copy (#9).
 - Follow Chrome/browser theme colors when the browser exposes a reliable signal to content scripts.
 - Full extension popup/settings surface beyond recovery controls.
 - Optional response-complete navigation prompt for exceptionally long answers.
@@ -199,7 +216,7 @@ Normal changes should be tracked as **GitHub issue → focused branch → pull r
 
 ## Resilience strategy
 
-DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. Recovery and UX layers are isolated from the main navigation logic so layout and interaction failures can be repaired without rewriting DOM indexing.
+DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. Recovery, UX, and visibility layers are isolated from the main navigation logic so layout and interaction failures can be repaired without rewriting DOM indexing.
 
 ## License
 
