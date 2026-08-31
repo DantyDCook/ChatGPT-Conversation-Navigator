@@ -2,31 +2,52 @@
 
 A lightweight Chrome extension for navigating long ChatGPT conversations without manually dragging through large responses.
 
-## v0.2.2 — Sizing + Response Tracking
+## v0.2.3 — Recovery + Safe Scaling
 
-v0.2.2 extends the movable, theme-aware Response Mini-Map with persistent display sizing and explicit response-context tracking.
+v0.2.3 is a recovery hotfix for the v0.2.2 UI-scale regression.
+
+### Safe UI scale
+
+v0.2.2 used CSS `zoom` to scale the floating navigator. That altered fixed-position geometry and could move a saved panel outside the visible viewport.
+
+v0.2.3 removes `zoom` from the active layout. **UI scale** now changes control density/spacing while **Text size**, **Panel width**, and **Panel height** remain independent settings.
+
+The recovery layer also re-clamps the rendered panel after scale/style changes and browser resizing.
+
+### Pinned-extension recovery popup
+
+The Chrome extension action now opens an out-of-band recovery popup. Pin **ChatGPT Conversation Navigator** to the Chrome toolbar for easy access.
+
+The popup provides:
+
+- **Bring Into View** — clears only the saved panel position, preserves the rest of the user's settings, and reloads ChatGPT into the safe default placement.
+- **Reset Navigator** — restores safe defaults for position, scale, text size, width/height, tracking mode, lock state, and idle opacity.
+
+This recovery surface remains available even when the floating panel itself is inaccessible.
+
+### Regression tracking
+
+Repository work for this hotfix is tracked through GitHub issues and a pull request. The repeatable test matrix is in [`docs/SMOKE_TESTS.md`](docs/SMOKE_TESTS.md), and the expected issue → branch → PR workflow is documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## v0.2.2 — Sizing + Response Tracking
 
 ### Response tracking
 
 Open **⋯ → Response tracking** and choose:
 
 - **Follow viewport** — default. The navigator uses a reading anchor near the middle of the viewport to determine which assistant response is currently being viewed. Prompt/response jumps and the code-block mini-map follow that response as you scroll.
-- **Latest response** — pins the navigator to the newest assistant response in the conversation regardless of where the page is currently scrolled.
+- **Latest response** — pins the navigator to the newest assistant response in the conversation regardless of scroll position.
 
 The selected mode persists across reloads.
 
 ### Display sizing
 
-The settings drawer now includes independent controls for:
+The settings drawer includes independent controls for:
 
-- **UI scale** — 75% to 150%; scales the navigator controls as a unit.
+- **UI scale** — 75% to 150% control-density scaling.
 - **Text size** — 10px to 18px.
 - **Panel width** — 260px to 520px.
 - **Panel height** — 40vh to 85vh maximum height.
-
-Sizing preferences persist across ChatGPT reloads and the panel is clamped back into the visible viewport when its dimensions or browser size change.
-
-For development safety, the known-good v0.2.1 `content.js` and `content.css` remain in the repository as rollback sources. The v0.2.2 manifest loads `content-v022.js` and `content-v022.css`.
 
 ## v0.2.1 — Movable, Theme-Aware Response Mini-Map
 
@@ -93,6 +114,7 @@ A debounced `MutationObserver` handles ChatGPT's streamed SPA DOM. Scroll and re
 3. Enable **Developer mode**.
 4. Choose **Load unpacked** and select the repository directory.
 5. After pulling an update, click **Reload** on the extension card and refresh ChatGPT.
+6. Optionally pin the extension in Chrome so the recovery popup is always available.
 
 Update an existing development checkout:
 
@@ -106,20 +128,32 @@ git pull
 ChatGPT-Conversation-Navigator/
 ├── manifest.json
 ├── dom-adapter.js
-├── content-v022.js       # active v0.2.2 source
-├── content-v022.css      # active v0.2.2 styles
+├── content-v022.js       # main v0.2.2/v0.2.3 navigator logic
+├── content-v022.css      # base v0.2.2 styles
+├── recovery.js           # v0.2.3 geometry guard + recovery message handler
+├── hotfix-v023.css       # removes zoom and applies safe density scaling
+├── popup.html
+├── popup.js
+├── popup.css
 ├── content.js            # retained v0.2.1 rollback source
 ├── content.css           # retained v0.2.1 rollback styles
+├── docs/
+│   └── SMOKE_TESTS.md
+├── CONTRIBUTING.md
 ├── README.md
 ├── LICENSE
 └── .gitignore
 ```
 
+## Development workflow
+
+Normal changes should be tracked as **GitHub issue → focused branch → pull request → validation → merge**. See `CONTRIBUTING.md`.
+
 ## Roadmap
 
 ### v0.2.x
 
-- Validate scale/width/height combinations and drag clamping.
+- Validate all scale/width/height combinations and drag clamping.
 - Validate Follow viewport vs Latest response across long conversations and streaming responses.
 - Validate ChatGPT Appearance, Contrast, Accent Color, and System-theme transitions.
 - Improve automatic code-block labels.
@@ -135,13 +169,13 @@ ChatGPT-Conversation-Navigator/
 ### Later
 
 - Follow Chrome/browser theme colors when the browser exposes a reliable signal to content scripts.
-- Extension popup/settings page.
+- Full extension popup/settings surface beyond recovery controls.
 - Optional response-complete navigation prompt for exceptionally long answers.
 - Chrome Web Store packaging/release workflow.
 
 ## Resilience strategy
 
-DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. UI logic should not need to change when a selector is repaired.
+DOM selectors and ChatGPT-specific traversal remain centralized in `dom-adapter.js`. Recovery and geometry guards are isolated from the main navigation logic so layout failures can be repaired without rewriting DOM indexing.
 
 ## License
 
