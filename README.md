@@ -2,9 +2,41 @@
 
 A lightweight Chrome extension for navigating long ChatGPT conversations without manually dragging through large responses.
 
-## v0.2.0 — Response Mini-Map
+## v0.2.1 — Movable, Theme-Aware Response Mini-Map
 
-v0.2 adds a floating, material-style navigation panel that follows the assistant response closest to the current viewport.
+v0.2.1 adds user-controlled placement and visual behavior to the v0.2 response mini-map.
+
+### Panel placement
+
+- **Move** — unlock the floating navigator and drag it by the header.
+- **Lock** — lock the navigator in its current position.
+- The selected position and lock state persist across ChatGPT reloads.
+- **Reset position** restores the default lower-right placement.
+- Saved positions are clamped back into the visible viewport when the browser window changes size.
+
+### Idle opacity
+
+Open the navigator settings with the **⋯** button and adjust **Idle opacity** from 15% to 100%.
+
+- The configured opacity is used while the navigator is idle.
+- Hovering, keyboard-focusing, or dragging the navigator always returns it to full opacity.
+- The setting persists across reloads.
+
+### ChatGPT theme following
+
+The navigator follows the effective ChatGPT page appearance instead of maintaining a separate light/dark theme.
+
+- Samples the live ChatGPT page background and text colors.
+- Watches ChatGPT root theme/class/style changes and the system dark-mode media query.
+- Reads `document.documentElement.dataset.chatTheme` for ChatGPT accent modes.
+- Supports Default, Green, Blue, Yellow, Pink, Orange, Purple, and Black accent treatments.
+- The hover preview uses the same theme variables as the navigator.
+
+The accent palette is intentionally isolated in UI code so it can be refined if ChatGPT changes the exact theme values.
+
+## v0.2 — Response Mini-Map
+
+The floating, material-style navigation panel follows the assistant response closest to the current viewport.
 
 ### Navigation
 
@@ -72,9 +104,9 @@ ChatGPT-Conversation-Navigator/
 
 ### v0.2.x
 
-- Validate code-block detection across different ChatGPT response/code rendering modes.
-- Improve automatic block labels.
-- Add user-selectable placement and floating-panel behavior.
+- Validate panel dragging/locking and persisted placement across viewport sizes.
+- Validate ChatGPT Appearance, Contrast, Accent Color, and System-theme transitions.
+- Improve automatic code-block labels.
 - Decide whether embedded v0.1 controls remain enabled by default.
 
 ### v0.3
@@ -86,6 +118,7 @@ ChatGPT-Conversation-Navigator/
 
 ### Later
 
+- Follow Chrome/browser theme colors when the browser exposes a reliable theme signal to content scripts.
 - Extension popup/settings page.
 - Configurable thresholds and visibility behavior.
 - Optional response-complete navigation prompt for exceptionally long answers.
