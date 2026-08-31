@@ -9,7 +9,9 @@
 .cgpt-nav-button,
 .cgpt-nav-primary-button,
 .cgpt-nav-action-button,
-.cgpt-nav-section-toggle {
+.cgpt-nav-section-toggle,
+.cgpt-nav-header-button,
+.cgpt-nav-reset-button {
   appearance: none;
   color: inherit;
   cursor: pointer;
@@ -38,18 +40,28 @@
 .cgpt-nav-button:focus-visible,
 .cgpt-nav-primary-button:focus-visible,
 .cgpt-nav-action-button:focus-visible,
-.cgpt-nav-section-toggle:focus-visible {
-  outline: 2px solid color-mix(in srgb, CanvasText 35%, transparent);
+.cgpt-nav-section-toggle:focus-visible,
+.cgpt-nav-header-button:focus-visible,
+.cgpt-nav-reset-button:focus-visible,
+.cgpt-nav-opacity-input:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--cgpt-nav-accent, CanvasText) 60%, transparent);
   outline-offset: 2px;
 }
 
 .cgpt-nav-button:active,
 .cgpt-nav-primary-button:active,
-.cgpt-nav-action-button:active {
+.cgpt-nav-action-button:active,
+.cgpt-nav-header-button:active,
+.cgpt-nav-reset-button:active {
   transform: translateY(1px);
 }
 
 .cgpt-nav-panel {
+  --cgpt-nav-page-bg: Canvas;
+  --cgpt-nav-page-text: CanvasText;
+  --cgpt-nav-accent: CanvasText;
+  --cgpt-nav-idle-opacity: 0.35;
+
   position: fixed;
   right: 20px;
   bottom: 88px;
@@ -57,36 +69,90 @@
   width: min(340px, calc(100vw - 24px));
   max-height: min(70vh, 620px);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, CanvasText 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 15%, transparent);
   border-radius: 20px;
-  background: color-mix(in srgb, Canvas 94%, transparent);
-  color: CanvasText;
+  background: color-mix(in srgb, var(--cgpt-nav-page-bg) 96%, var(--cgpt-nav-accent) 4%);
+  color: var(--cgpt-nav-page-text);
   box-shadow:
-    0 12px 30px color-mix(in srgb, CanvasText 14%, transparent),
-    0 2px 8px color-mix(in srgb, CanvasText 8%, transparent);
+    0 12px 30px color-mix(in srgb, var(--cgpt-nav-page-text) 14%, transparent),
+    0 2px 8px color-mix(in srgb, var(--cgpt-nav-page-text) 8%, transparent);
   backdrop-filter: blur(18px) saturate(1.15);
   -webkit-backdrop-filter: blur(18px) saturate(1.15);
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
+  opacity: var(--cgpt-nav-idle-opacity);
+  transition:
+    opacity 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cgpt-nav-panel:hover,
+.cgpt-nav-panel:focus-within,
+.cgpt-nav-panel[data-dragging="true"] {
+  opacity: 1;
 }
 
 .cgpt-nav-panel[hidden],
 .cgpt-nav-preview[hidden],
-.cgpt-nav-block-list[hidden] {
+.cgpt-nav-block-list[hidden],
+.cgpt-nav-settings[hidden] {
   display: none !important;
 }
 
 .cgpt-nav-panel-header {
   display: flex;
+  min-height: 42px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px 8px;
+  gap: 10px;
+  padding: 8px 10px 6px 14px;
+  user-select: none;
+  touch-action: none;
+}
+
+.cgpt-nav-panel[data-position-locked="false"] .cgpt-nav-panel-header {
+  cursor: grab;
+}
+
+.cgpt-nav-panel[data-position-locked="false"][data-dragging="true"] .cgpt-nav-panel-header {
+  cursor: grabbing;
 }
 
 .cgpt-nav-panel-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 13px;
   font-weight: 650;
   letter-spacing: 0.01em;
+}
+
+.cgpt-nav-header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.cgpt-nav-header-button {
+  min-width: 34px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cgpt-nav-page-text) 5%, transparent);
+  padding: 0 9px;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+  transition: background 120ms ease, transform 120ms ease, border-color 120ms ease;
+}
+
+.cgpt-nav-header-button:hover {
+  border-color: color-mix(in srgb, var(--cgpt-nav-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 10%, transparent);
 }
 
 .cgpt-nav-primary-actions {
@@ -98,16 +164,86 @@
 
 .cgpt-nav-primary-button {
   min-height: 36px;
-  border: 1px solid color-mix(in srgb, CanvasText 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 13%, transparent);
   border-radius: 12px;
-  background: color-mix(in srgb, CanvasText 6%, Canvas);
+  background: color-mix(in srgb, var(--cgpt-nav-page-text) 6%, var(--cgpt-nav-page-bg));
   font-size: 12px;
+  font-weight: 600;
+  transition: background 120ms ease, transform 120ms ease, border-color 120ms ease;
+}
+
+.cgpt-nav-primary-button:hover {
+  border-color: color-mix(in srgb, var(--cgpt-nav-accent) 25%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 9%, var(--cgpt-nav-page-bg));
+}
+
+.cgpt-nav-settings {
+  margin: 0 10px 10px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--cgpt-nav-page-text) 4%, transparent);
+}
+
+.cgpt-nav-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px;
+  font-size: 11.5px;
+}
+
+.cgpt-nav-opacity-setting {
+  display: block;
+}
+
+.cgpt-nav-setting-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.cgpt-nav-setting-label {
+  font-weight: 600;
+}
+
+.cgpt-nav-setting-value {
+  opacity: 0.66;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cgpt-nav-opacity-input {
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--cgpt-nav-accent);
+  cursor: pointer;
+}
+
+.cgpt-nav-theme-setting {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 8%, transparent);
+}
+
+.cgpt-nav-reset-button {
+  width: 100%;
+  min-height: 30px;
+  margin-top: 9px;
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
+  border-radius: 10px;
+  background: transparent;
+  font-size: 11.5px;
   font-weight: 600;
   transition: background 120ms ease, transform 120ms ease;
 }
 
-.cgpt-nav-primary-button:hover {
-  background: color-mix(in srgb, CanvasText 10%, Canvas);
+.cgpt-nav-reset-button:hover {
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 9%, transparent);
 }
 
 .cgpt-nav-section-toggle {
@@ -117,7 +253,7 @@
   justify-content: space-between;
   gap: 12px;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, CanvasText 10%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
   background: transparent;
   padding: 10px 14px;
   text-align: left;
@@ -126,7 +262,7 @@
 }
 
 .cgpt-nav-section-toggle:hover {
-  background: color-mix(in srgb, CanvasText 5%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 7%, transparent);
 }
 
 .cgpt-nav-section-meta {
@@ -139,7 +275,7 @@
   min-width: 22px;
   padding: 2px 7px;
   border-radius: 999px;
-  background: color-mix(in srgb, CanvasText 9%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 12%, transparent);
   text-align: center;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
@@ -172,7 +308,7 @@
 
 .cgpt-nav-block-row:hover,
 .cgpt-nav-block-row:focus-within {
-  background: color-mix(in srgb, CanvasText 6%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 8%, transparent);
 }
 
 .cgpt-nav-block-text {
@@ -218,10 +354,11 @@
 }
 
 .cgpt-nav-action-button:hover {
-  background: color-mix(in srgb, CanvasText 10%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 12%, transparent);
 }
 
 .cgpt-nav-action-success {
+  color: var(--cgpt-nav-accent);
   font-weight: 700;
 }
 
@@ -250,7 +387,7 @@
 .cgpt-nav-copy-square-front {
   right: 1px;
   bottom: 1px;
-  background: color-mix(in srgb, Canvas 96%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-page-bg) 96%, transparent);
 }
 
 .cgpt-nav-empty {
@@ -261,16 +398,20 @@
 }
 
 .cgpt-nav-preview {
+  --cgpt-nav-page-bg: Canvas;
+  --cgpt-nav-page-text: CanvasText;
+  --cgpt-nav-accent: CanvasText;
+
   position: fixed;
   z-index: 2147483001;
   width: min(480px, calc(100vw - 32px));
   max-height: min(52vh, 420px);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, CanvasText 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 15%, transparent);
   border-radius: 16px;
-  background: color-mix(in srgb, Canvas 97%, transparent);
-  color: CanvasText;
-  box-shadow: 0 16px 38px color-mix(in srgb, CanvasText 18%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-page-bg) 97%, var(--cgpt-nav-accent) 3%);
+  color: var(--cgpt-nav-page-text);
+  box-shadow: 0 16px 38px color-mix(in srgb, var(--cgpt-nav-page-text) 18%, transparent);
   backdrop-filter: blur(18px) saturate(1.1);
   -webkit-backdrop-filter: blur(18px) saturate(1.1);
   pointer-events: none;
@@ -278,7 +419,7 @@
 
 .cgpt-nav-preview-title {
   padding: 10px 12px 8px;
-  border-bottom: 1px solid color-mix(in srgb, CanvasText 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -291,7 +432,7 @@
   overflow: auto;
   margin: 0;
   padding: 12px;
-  background: color-mix(in srgb, CanvasText 4%, Canvas);
+  background: color-mix(in srgb, var(--cgpt-nav-page-text) 4%, var(--cgpt-nav-page-bg));
   color: inherit;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 11px;
@@ -301,7 +442,7 @@
 }
 
 .cgpt-nav-target-highlight {
-  outline: 3px solid color-mix(in srgb, CanvasText 28%, transparent) !important;
+  outline: 3px solid color-mix(in srgb, var(--cgpt-nav-accent, CanvasText) 55%, transparent) !important;
   outline-offset: 5px;
   border-radius: 12px;
   transition: outline-color 300ms ease;
@@ -310,6 +451,17 @@
 [data-message-author-role="user"],
 [data-message-author-role="assistant"] {
   scroll-margin-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgpt-nav-panel,
+  .cgpt-nav-button,
+  .cgpt-nav-primary-button,
+  .cgpt-nav-action-button,
+  .cgpt-nav-header-button,
+  .cgpt-nav-reset-button {
+    transition: none;
+  }
 }
 
 @media (max-width: 720px) {
