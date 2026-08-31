@@ -1,0 +1,52 @@
+.cgpt-nav-panel {
+  zoom: 1 !important;
+}
+
+.cgpt-nav-panel-header {
+  min-height: var(--cgpt-nav-header-min-height, 42px);
+  padding:
+    var(--cgpt-nav-header-pad-y, 8px)
+    var(--cgpt-nav-header-pad-x, 12px)
+    calc(var(--cgpt-nav-header-pad-y, 8px) * 0.75);
+}
+
+.cgpt-nav-header-button {
+  min-width: var(--cgpt-nav-header-button-min-width, 34px);
+  height: var(--cgpt-nav-header-button-height, 30px);
+}
+
+.cgpt-nav-primary-actions {
+  gap: var(--cgpt-nav-primary-gap, 8px);
+  padding:
+    calc(var(--cgpt-nav-primary-gap, 8px) * 0.5)
+    var(--cgpt-nav-primary-pad-x, 12px)
+    var(--cgpt-nav-primary-pad-bottom, 10px);
+}
+
+.cgpt-nav-primary-button {
+  min-height: var(--cgpt-nav-primary-min-height, 36px);
+}
+
+.cgpt-nav-settings {
+  margin-left: var(--cgpt-nav-settings-pad, 10px);
+  margin-right: var(--cgpt-nav-settings-pad, 10px);
+  margin-bottom: var(--cgpt-nav-settings-pad, 10px);
+  padding: var(--cgpt-nav-settings-pad, 10px);
+}
+
+.cgpt-nav-section-toggle {
+  padding:
+    var(--cgpt-nav-section-pad-y, 10px)
+    var(--cgpt-nav-section-pad-x, 14px);
+}
+
+.cgpt-nav-block-row {
+  min-height: var(--cgpt-nav-row-min-height, 42px);
+  padding: var(--cgpt-nav-row-pad, 6px);
+}
+
+.cgpt-nav-action-button {
+  width: var(--cgpt-nav-action-size, 30px);
+  height: var(--cgpt-nav-action-size, 30px);
+  border-radius: var(--cgpt-nav-action-radius, 9px);
+}
