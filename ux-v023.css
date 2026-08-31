@@ -1,0 +1,81 @@
+.cgpt-nav-panel-header {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: color-mix(in srgb, var(--cgpt-nav-page-bg) 96%, var(--cgpt-nav-accent) 4%);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.cgpt-nav-settings-sticky-header {
+  position: sticky;
+  top: var(--cgpt-nav-header-min-height, 42px);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -10px -10px 8px;
+  padding: 9px 10px 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 9%, transparent);
+  background: color-mix(in srgb, var(--cgpt-nav-page-bg) 97%, var(--cgpt-nav-accent) 3%);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.cgpt-nav-settings-sticky-title {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 650;
+}
+
+.cgpt-nav-settings-autosave {
+  opacity: 0.52;
+  font-size: 0.78em;
+  font-weight: 500;
+}
+
+.cgpt-nav-settings-done {
+  appearance: none;
+  flex: 0 0 auto;
+  min-height: 28px;
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-accent) 28%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 10%, transparent);
+  color: inherit;
+  padding: 0 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.86em;
+  font-weight: 650;
+}
+
+.cgpt-nav-settings-done:hover,
+.cgpt-nav-settings-done:focus-visible {
+  background: color-mix(in srgb, var(--cgpt-nav-accent) 16%, transparent);
+}
+
+.cgpt-nav-settings-done:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--cgpt-nav-accent) 60%, transparent);
+  outline-offset: 2px;
+}
+
+.cgpt-nav-primary-actions.cgpt-nav-primary-has-bottom {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.cgpt-nav-bottom-button[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 420px) {
+  .cgpt-nav-primary-actions.cgpt-nav-primary-has-bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cgpt-nav-primary-actions.cgpt-nav-primary-has-bottom .cgpt-nav-bottom-button {
+    grid-column: 1 / -1;
+  }
+}

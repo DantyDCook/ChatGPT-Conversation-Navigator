@@ -1,0 +1,82 @@
+.cgpt-nav-panel[data-cgpt-nav-visibility="bubble"],
+.cgpt-nav-panel[data-cgpt-nav-visibility="hidden"] {
+  display: none !important;
+}
+
+.cgpt-nav-bubble {
+  --cgpt-nav-page-bg: Canvas;
+  --cgpt-nav-page-text: CanvasText;
+  --cgpt-nav-accent: CanvasText;
+  --cgpt-nav-idle-opacity: 0.35;
+
+  position: fixed;
+  z-index: 2147483001;
+  width: 52px;
+  height: 52px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--cgpt-nav-page-text) 16%, transparent);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--cgpt-nav-accent) 17%, var(--cgpt-nav-page-bg)),
+      color-mix(in srgb, var(--cgpt-nav-page-bg) 94%, var(--cgpt-nav-accent) 6%)
+    );
+  color: var(--cgpt-nav-page-text);
+  box-shadow:
+    0 10px 26px color-mix(in srgb, var(--cgpt-nav-page-text) 16%, transparent),
+    0 2px 8px color-mix(in srgb, var(--cgpt-nav-page-text) 10%, transparent);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  opacity: var(--cgpt-nav-idle-opacity);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  font: 700 22px/1 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition:
+    opacity 160ms ease,
+    transform 140ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.cgpt-nav-bubble:hover,
+.cgpt-nav-bubble:focus-visible,
+.cgpt-nav-bubble[data-dragging="true"] {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--cgpt-nav-accent) 35%, transparent);
+}
+
+.cgpt-nav-bubble:hover,
+.cgpt-nav-bubble:focus-visible {
+  transform: scale(1.04);
+}
+
+.cgpt-nav-bubble[data-dragging="true"] {
+  cursor: grabbing;
+  transform: scale(1.02);
+}
+
+.cgpt-nav-bubble:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--cgpt-nav-accent) 65%, transparent);
+  outline-offset: 3px;
+}
+
+.cgpt-nav-bubble[hidden] {
+  display: none !important;
+}
+
+.cgpt-nav-minimize-button {
+  font-size: 1.05em;
+}
+
+.cgpt-nav-hide-button {
+  margin-top: 7px;
+  border-color: color-mix(in srgb, var(--cgpt-nav-page-text) 14%, transparent);
+}
+
+.cgpt-nav-hide-button:hover {
+  border-color: color-mix(in srgb, var(--cgpt-nav-accent) 28%, transparent);
+}

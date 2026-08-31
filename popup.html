@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChatGPT Conversation Navigator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="popup-shell">
+    <header>
+      <h1>Conversation Navigator</h1>
+      <p>Visibility and recovery controls for the floating panel.</p>
+    </header>
+
+    <section class="actions" aria-label="Navigator visibility and recovery actions">
+      <button id="showNavigator" type="button" hidden>
+        <span id="showNavigatorTitle" class="button-title">Show Navigator</span>
+        <span id="showNavigatorHelp" class="button-help">Restore the full in-page navigator</span>
+      </button>
+
+      <button id="bringIntoView" type="button">
+        <span class="button-title">Bring Into View</span>
+        <span class="button-help">Keep settings, restore panel position</span>
+      </button>
+
+      <button id="resetNavigator" class="secondary" type="button">
+        <span class="button-title">Reset Navigator</span>
+        <span class="button-help">Restore safe UI defaults</span>
+      </button>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
