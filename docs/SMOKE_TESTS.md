@@ -1,6 +1,6 @@
 # Navigator Smoke / Regression Tests
 
-Run these checks after changing floating-panel geometry, persistence, recovery, tracking, or interaction behavior.
+Run these checks after changing floating-panel geometry, persistence, recovery, tracking, visibility, or interaction behavior.
 
 ## Setup
 
@@ -53,6 +53,27 @@ Run these checks after changing floating-panel geometry, persistence, recovery, 
 - [ ] Clicking within the navigator does not unexpectedly close settings.
 - [ ] Closing settings preserves panel position, size, opacity, tracking mode, and other changed values.
 
+## Visibility states (#7, #10, #11, #14)
+
+- [ ] Full mode shows the complete navigator and no bubble.
+- [ ] Header **−** minimizes Full → Bubble.
+- [ ] Bubble inherits ChatGPT light/dark/accent appearance.
+- [ ] Bubble uses configured idle opacity and returns to 100% on hover/focus/drag.
+- [ ] Clicking the bubble restores Bubble → Full.
+- [ ] Dragging the bubble does not accidentally restore Full.
+- [ ] Bubble drag position persists after reload.
+- [ ] Re-minimizing returns the bubble to its parked bubble position.
+- [ ] Restoring Full returns the full panel to its previous safe panel position, not the bubble coordinates.
+- [ ] **Hide Navigator** in settings changes Full → Hidden.
+- [ ] Hidden mode remains hidden after reload.
+- [ ] Pinned extension popup shows **Show Navigator** while Hidden.
+- [ ] Popup shows **Restore Full Navigator** while Bubble.
+- [ ] Popup does not show a redundant visibility restore action while Full.
+- [ ] **Show Navigator** restores Hidden/Bubble → Full without DevTools.
+- [ ] **Reset Navigator** from Bubble or Hidden restores Full mode plus safe defaults.
+- [ ] Browser resize clamps a visible bubble back into the viewport.
+- [ ] Full/Bubble/Hidden transitions preserve navigation/settings functionality after Full is restored.
+
 ## Appearance controls
 
 Test each control independently and then in combination.
@@ -91,8 +112,18 @@ Intentionally place the panel near an edge, change size settings, or otherwise c
 - [ ] Both actions work without DevTools/localStorage edits.
 - [ ] Popup gives a useful error when the active tab is not ChatGPT or has not been refreshed after an extension reload.
 
+## Copy fidelity (#9)
+
+- [ ] Native ChatGPT Copy and navigator Copy produce visibly identical text for a long plain-text block.
+- [ ] Compare line count and character count for native vs navigator output.
+- [ ] Validate Windows paths, indentation, blank lines, punctuation, and long separator lines.
+- [ ] Verify the navigator never delegates to a Copy button belonging to a different block.
+- [ ] Verify direct clipboard extraction still works when native Copy cannot be found.
+- [ ] Document any unavoidable CRLF/LF, trailing-space, or terminal-newline normalization differences.
+
 ## Persistence migration
 
 - [ ] Existing v0.2.1/v0.2.2 position and opacity settings load successfully.
 - [ ] Invalid/missing values fall back to defaults.
 - [ ] Recovery reset produces a valid settings record.
+- [ ] Visibility state uses its own storage record and is not erased by normal settings autosave.
