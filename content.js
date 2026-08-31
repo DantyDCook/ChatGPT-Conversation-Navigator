@@ -848,6 +848,10 @@
     attributes: true,
     attributeFilter: ['class', 'style', 'data-chat-theme']
   });
+  themeObserver.observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class', 'style']
+  });
 
   const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
   colorSchemeQuery.addEventListener?.('change', syncThemeFromPage);
