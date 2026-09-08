@@ -1,0 +1,28 @@
+schema_version: "1.0"
+policy_mode: risk_calibrated
+project:
+  name: ChatGPT-Conversation-Navigator
+  default_assurance: low_medium
+policy_precedence: [repository_config, project_memory, global_default]
+workflow:
+  sequence: [plan, build, test, repair, milestone_audit, verify, next]
+  design_audit: when_browser_permissions_or_data_access_contract_changes
+  adversarial_audit: milestone_or_privacy_boundary
+  reopen_plan_only_for: [architectural_contradiction, missing_requirement, invalidated_invariant]
+  batch_nonblocking_repairs: true
+triage:
+  fix_now_if: [build_breaking, test_blocking, privacy_or_permission_boundary, unintended_data_exposure, destructive_operation_risk, architectural_invariant_violation, high_deferral_cost, trivial_and_immediate]
+  otherwise: {disposition: defer_to_issue, continue_iteration: true}
+  dispositions: [blocker, repair_now, defer_to_issue, accept, invalid]
+regression: {small_change: focused, subsystem_change: subsystem, milestone: full, release: full}
+milestone_gate:
+  maximum_open: {critical: 0, high: 0, medium: 10, low: unlimited}
+components:
+  browser_permissions: {assurance: medium_high}
+  conversation_data_access: {assurance: medium_high}
+  parsing_and_navigation: {assurance: medium}
+  local_preferences: {assurance: low_medium}
+  ui_and_styling: {assurance: low}
+issue_tracking:
+  create_for_deferred_findings: true
+  required_fields: [component, observed_behavior, expected_behavior, severity, impact, deferral_risk, evidence, recommended_repair]
