@@ -1,0 +1,55 @@
+name: Navigator extension CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-syntax-and-package:
+    # Public pull requests run only in hosted isolation, never on LocalCI.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Check JavaScript syntax
+        run: |
+          set -euo pipefail
+          for source in ./*.js; do node --check "$source"; done
+      - name: Validate and package manifest assets
+        run: python3 scripts/package_extension.py --out-dir dist
+      - name: Verify packaged checksums
+        run: (cd dist && sha256sum --check SHA256SUMS.txt)
+
+  localci-package:
+    # Source from public forks must never execute on privileged owner runners.
+    if: github.repository == 'DantyDCook/ChatGPT-Conversation-Navigator' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, local-ci, hyperv-ci]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Test source and create deterministic extension archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'if (Number(process.versions.node.split(".")[0]) < 20) process.exit(1)'
+          for source in ./*.js; do node --check "$source"; done
+          python3 scripts/package_extension.py --out-dir dist
+          (cd dist && sha256sum --check SHA256SUMS.txt)
+      - name: Archive unsigned extension package
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: navigator-extension-${{ github.sha }}
+          path: dist/
+          if-no-files-found: warn
+          retention-days: 30
